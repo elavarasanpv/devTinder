@@ -1,6 +1,7 @@
 /** @format */
 
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 const userSchema = new mongoose.Schema(
   {
@@ -19,10 +20,29 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true, // Convert to lowercase
       trim: true, // Remove whitespace
+      validate: {
+        validator: function (v) {
+          return validator.isEmail(v);
+        },
+        message: (props) => `${props.value} is not a valid email!`,
+      },
     },
     password: {
       type: String,
       required: true,
+      validate: {
+        validator: function (v) {
+          return validator.isStrongPassword(v, {
+            minLength: 8,
+            minLowercase: 1,
+            minUppercase: 1,
+            minNumbers: 1,
+            minSymbols: 1,
+          });
+        },
+        message: (props) =>
+          `Password is not strong enough! It should be at least 8 characters long and include uppercase letters, lowercase letters, numbers, and symbols.`,
+      },
     },
     age: {
       type: Number,

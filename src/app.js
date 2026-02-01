@@ -225,7 +225,13 @@ app.patch("/user/:id", async (req, res) => {
   const data = req.body;
 
   try {
-    const Updated_Allowed_Fields = ["age", "about", "photoUrl", "skills"];
+    const Updated_Allowed_Fields = [
+      "age",
+      "about",
+      "photoUrl",
+      "skills",
+      "password",
+    ];
 
     const checkUpdates = Object.keys(data).every((field) =>
       Updated_Allowed_Fields.includes(field),
