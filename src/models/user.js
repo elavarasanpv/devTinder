@@ -9,7 +9,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       maxLength: 50,
-      minLength: 5,
+      minLength: 4,
+      index: true, // Add index for faster search
     },
     lastname: {
       type: String,
@@ -30,6 +31,18 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
+      validate: {
+        validator: function (v) {
+          return validator.isStrongPassword(v, {
+            minLength: 8,
+            minLowercase: 1,
+            minUppercase: 1,
+            minNumbers: 1,
+            minSymbols: 1,
+          });
+        },
+        message: (props) => `Password is not strong enough!`,
+      },
     },
     age: {
       type: Number,
@@ -56,10 +69,10 @@ const userSchema = new mongoose.Schema(
       type: [String],
       validate: {
         validator: function (v) {
-          return v.length <= 3;
+          return v.length <= 10;
         },
         message: (props) =>
-          `One or more skills exceed the maximum length of 3 skills!`,
+          `One or more skills exceed the maximum length of 10 skills!`,
       },
     },
   },
